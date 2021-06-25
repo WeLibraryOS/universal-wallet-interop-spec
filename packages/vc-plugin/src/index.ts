@@ -7,14 +7,14 @@ import {
   VerifyPresentation,
 } from './types';
 
-import { issue } from './issue';
-
+import { issue, issueUsingWalletSuite } from './issue';
 import { verifyCredential } from './verifyCredential';
 import { createVerifiablePresentation } from './createVerifiablePresentation';
 import { verifyPresentation } from './verifyPresentation';
 
 interface VcPlugin {
   issue: (config: IssueCredential) => Promise<any>;
+  issueUsingWalletSuite: (config: IssueCredential) => Promise<any>;
   verifyCredential: (config: VerifyCredential) => Promise<any>;
   createVerifiablePresentation: (config: PresentCredentials) => Promise<any>;
   verifyPresentation: (config: VerifyPresentation) => Promise<any>;
@@ -22,6 +22,7 @@ interface VcPlugin {
 
 const factoryDefaults = {
   issue,
+  issueUsingWalletSuite,
   verifyCredential,
   createVerifiablePresentation,
   verifyPresentation,
