@@ -13,14 +13,19 @@ const issue = async ({ credential, options }: IssueCredential) => {
   return signedVC;
 };
 
-const issueUsingWalletSuite = async ({ credential, options }: IssueCredential) => {
+const issueUsingWalletSuite = async ({
+  credential,
+  options,
+}: IssueCredential) => {
   const wallet = options?.wallet;
   const contents = JSON.parse(JSON.stringify(wallet.contents));
-  const key = contents?.find((c: { name: string; }) => c?.name === 'Signing Key');
+  const key = contents?.find(
+    (c: { name: string }) => c?.name === 'Signing Key'
+  );
   if (key) {
-      const signingKey = Ed25519KeyPair.from(key);
-      const suite = new Ed25519Signature2018({ key: signingKey });
-      return wallet.issue({ credential, options: { suite } });
+    const signingKey = Ed25519KeyPair.from(key);
+    const suite = new Ed25519Signature2018({ key: signingKey });
+    return wallet.issue({ credential, options: { suite } });
   }
 };
 
