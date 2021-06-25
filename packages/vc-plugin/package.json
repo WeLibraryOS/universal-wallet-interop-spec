@@ -1,8 +1,8 @@
 {
-  "name": "@digitalcredentials/universal-wallet-vc-plugin",
+  "name": "@welibraryos/universal-wallet-vc-plugin",
   "author": "Orie Steele",
   "module": "dist/universal-wallet-vc-plugin.esm.js",
-  "version": "0.5.1-unstable.3",
+  "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -52,10 +52,10 @@
     "yargs-parser": "^19.0.1"
   },
   "dependencies": {
+    "@digitalbazaar/ed25519-signature-2018": "^2.0.1",
+    "@digitalbazaar/vc": "^1.0.0",
     "@transmute/did-key-ed25519": "^0.2.1-unstable.13",
     "@transmute/did-key-x25519": "^0.2.1-unstable.13",
-    "@transmute/ed25519-signature-2018": "^0.1.1-unstable.4",
-    "@transmute/vc.js": "^0.1.1-unstable.4",
     "core-js": "^3.8.3",
     "factory.ts": "^0.5.1",
     "isomorphic-webcrypto": "^2.3.6"

@@ -1,11 +1,9 @@
-import { ld } from '@transmute/vc.js';
+import vc from '@digitalbazaar/vc';
 
 import { VerifyCredential } from './types';
 
-const vcjs = ld;
-
 const verifyCredential = ({ credential, options }: VerifyCredential) => {
-  return vcjs.verifyCredential({
+  return vc.verifyCredential({
     credential,
     suite: options.suite,
     documentLoader: options.documentLoader,

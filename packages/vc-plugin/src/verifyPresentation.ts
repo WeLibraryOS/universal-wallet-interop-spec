@@ -1,11 +1,9 @@
-import { ld } from '@transmute/vc.js';
+import vc from '@digitalbazaar/vc';
 
 import { VerifyPresentation } from './types';
 
-const vcjs = ld;
-
 const verifyPresentation = ({ presentation, options }: VerifyPresentation) => {
-  return vcjs.verify({
+  return vc.verify({
     presentation,
     ...options,
   });

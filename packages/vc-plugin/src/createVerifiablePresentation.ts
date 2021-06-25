@@ -1,8 +1,6 @@
-import { ld } from '@transmute/vc.js';
+import vc from '@digitalbazaar/vc';
 
 import { PresentCredentials } from './types';
-
-const vcjs = ld;
 
 const createVerifiablePresentation = ({
   verifiableCredential,
@@ -15,7 +13,7 @@ const createVerifiablePresentation = ({
     verifiableCredential,
   };
 
-  return vcjs.signPresentation({
+  return vc.signPresentation({
     presentation,
     suite: options.suite,
     challenge: options.challenge,
