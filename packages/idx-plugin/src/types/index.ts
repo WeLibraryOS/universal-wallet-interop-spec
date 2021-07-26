@@ -1,3 +1,3 @@
 export interface IdxClient {
-    endpoint: String;
+  endpoint: String;
 }
