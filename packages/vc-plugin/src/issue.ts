@@ -8,7 +8,6 @@ const issue = async ({ credential, options }: IssueCredential) => {
   const signedVC = await vc.issue({
     credential,
     suite: options.suite,
-    documentLoader: options.documentLoader,
   });
   return signedVC;
 };
