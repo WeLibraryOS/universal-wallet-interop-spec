@@ -17,21 +17,24 @@ interface IdxPlugin {
   credentialAlias: String;
 
   idxClientFromCeramic: (ceramicClient: CeramicClient, options: any) => IDX;
-  
+
   setIdxClient: (ceramicClient: CeramicClient, options: any) => IDX;
 
   getCredentialStreamIdsFromIndex: (alias: String) => Promise<any[]>;
-  
-  addCredentialStreamIdToIndex: (streamId: String, alias: String) => Promise<String>;
+
+  addCredentialStreamIdToIndex: (
+    streamId: String,
+    alias: String
+  ) => Promise<String>;
 }
 
 const factoryDefaults = {
   idxClient: null,
-  
+
   idxAliases: LOCAL_ALIASES,
 
   credentialAlias: CREDENTIAL_ALIAS,
-  
+
   idxClientFromCeramic: (
     ceramicClient: CeramicClient,
     options: any = { aliases: LOCAL_ALIASES }
@@ -40,16 +43,15 @@ const factoryDefaults = {
     return client;
   },
 
-  setIdxClient: function(
-    ceramicClient: CeramicClient,
-    options: any = {},
-  ): IDX {
-
+  setIdxClient: function(ceramicClient: CeramicClient, options: any = {}): IDX {
     if (!options.aliases) {
       options.aliases = (this as IdxPlugin).idxAliases;
     }
 
-    const client = (this as IdxPlugin).idxClientFromCeramic(ceramicClient, options);
+    const client = (this as IdxPlugin).idxClientFromCeramic(
+      ceramicClient,
+      options
+    );
     (this as IdxPlugin).idxClient = client;
     return client;
   },
@@ -58,7 +60,10 @@ const factoryDefaults = {
     return (await (this as IdxPlugin).idxClient.get(alias)) || [];
   },
 
-  addCredentialStreamIdToIndex: async (streamId: String, alias: String): Promise<String> => {
+  addCredentialStreamIdToIndex: async (
+    streamId: String,
+    alias: String
+  ): Promise<String> => {
     if (!streamId) {
       throw Error('No streamId provided');
     }
@@ -67,10 +72,12 @@ const factoryDefaults = {
     if (!client) {
       throw Error('No IDX client available');
     }
-    
-    const existing = await (this as IdxPlugin).getCredentialStreamIdsFromIndex(alias);
+
+    const existing = await (this as IdxPlugin).getCredentialStreamIdsFromIndex(
+      alias
+    );
     return (this as IdxPlugin).idxClient.set(alias, existing.push(streamId));
-  }
+  },
 };
 
 const pluginFactory = Factory.Sync.makeFactory<IdxPlugin>(factoryDefaults);
