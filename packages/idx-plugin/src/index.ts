@@ -56,7 +56,7 @@ const factoryDefaults = {
     return client;
   },
 
-  getCredentialStreamIdsFromIndex: async (alias: String): Promise<any[]> => {
+  getCredentialStreamIdsFromIndex: async function(alias: String): Promise<any[]> {
     return (await (this as IdxPlugin).idxClient.get(alias)) || [];
   },
 
