@@ -1,7 +1,7 @@
 import * as ed25519 from '@transmute/did-key-ed25519';
 
 // TODO: why does this throw "Cannot set property 'default' of undefined"
-// import crypto from 'isomorphic-webcrypto'; 
+import crypto from 'isomorphic-webcrypto'; 
 
 export const seedToId = async (seed: Uint8Array) => {
   const buffer = await crypto.subtle.digest('SHA-256', seed);
