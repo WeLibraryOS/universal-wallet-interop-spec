@@ -10,9 +10,6 @@
     "dist",
     "src"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/WeLibraryOS/universal-wallet-interop-spec.git",
