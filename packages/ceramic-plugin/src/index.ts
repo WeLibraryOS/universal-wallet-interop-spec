@@ -1,6 +1,6 @@
 import * as Factory from 'factory.ts';
 import CeramicClient from "@ceramicnetwork/http-client";
-import { TileDocument } from "@ceramicnetwork/stream-tile";
+import { TileDocument, TileMetadataArgs } from "@ceramicnetwork/stream-tile";
 import KeyDidResolver from "key-did-resolver";
 import { DID } from "dids";
 import { Ed25519Provider } from "key-did-provider-ed25519";
@@ -10,23 +10,23 @@ const LOCAL_CERAMIC_NODE = "http://0.0.0.0:7007";
 
 interface CeramicPlugin {
   ceramicClient: any; // TODO: this is optional CeramicClient
-  defaultContentFamily: String;
-  endpoint: String;
+  defaultContentFamily: string;
+  endpoint: string;
 
-  ceramicClientFromEndpointAndWalletSuite: (
+  ceramicClientFromWalletSuite: (
     wallet: any,
   ) => Promise<CeramicClient>;
 
-  setCeramicClientFromEndpointAndWalletSuite: (
+  setCeramicClientFromWalletSuite: (
     wallet: any,
   ) => Promise<CeramicClient>;
 
-  publishContent: (
+  publishContentToCeramic: (
     content: any,
-    options: any
-  ) => Promise<String>;
+    options: TileMetadataArgs
+  ) => Promise<string>;
 
-  readContent: (streamId: String) => Promise<any>;
+  readContentFromCeramic: (streamId: string) => Promise<any>;
 }
 
 const factoryDefaults = {
@@ -36,7 +36,7 @@ const factoryDefaults = {
 
   endpoint: LOCAL_CERAMIC_NODE,
 
-  ceramicClientFromEndpointAndWalletSuite: async function(wallet: any = {},
+  ceramicClientFromWalletSuite: async function(wallet: any = {},
   ): Promise<CeramicClient> {
 
     const client = new CeramicClient((this as CeramicPlugin).endpoint);
@@ -51,7 +51,7 @@ const factoryDefaults = {
     // if we can just pass wallet signing key here instead of creating a duplicate from same seed.
     const contents = JSON.parse(JSON.stringify(wallet.contents));
     const key = contents?.find(
-      (c: { name: String }) => c?.name === 'DID Key Secret'
+      (c: { name: string }) => c?.name === 'DID Key Secret'
     )?.value;
 
     const ceramicProvider = new Ed25519Provider(
@@ -64,16 +64,16 @@ const factoryDefaults = {
     return client;
   },
 
-  setCeramicClientFromEndpointAndWalletSuite: async function(
+  setCeramicClientFromWalletSuite: async function(
       wallet: any = {},
   ): Promise<CeramicClient> {
 
-    const client = await (this as CeramicPlugin).ceramicClientFromEndpointAndWalletSuite(wallet);
+    const client = await (this as CeramicPlugin).ceramicClientFromWalletSuite(wallet);
     (this as CeramicPlugin).ceramicClient = client;
     return client;
   },
 
-  publishContent: async function(content: any, options: any = { controllers: []}) {
+  publishContentToCeramic: async function(content: any, options: TileMetadataArgs = { }) {
     if (!content) {
       throw new Error('content is required');
     }
@@ -83,6 +83,12 @@ const factoryDefaults = {
       throw new Error("ceramicClient not set");
     }
 
+    // default to current authorized
+    if (!options.controllers) {
+      options.controllers = [(this as CeramicPlugin).ceramicClient.did.id];
+    }
+
+    // use default
     if (!options.family) {
       options.family = (this as CeramicPlugin).defaultContentFamily;
     }
@@ -94,13 +100,13 @@ const factoryDefaults = {
     return doc.id.toString();
   },
 
-  readContent: async function(streamId: String) {
+  readContentFromCeramic: async function(streamId: string) {
     const client = (this as CeramicPlugin).ceramicClient;
     if (!client) {
       throw new Error("ceramicClient not set");
     }
 
-    return TileDocument.load(client, streamId);
+    return (await TileDocument.load(client, streamId))?.content;
   }
 };
 
