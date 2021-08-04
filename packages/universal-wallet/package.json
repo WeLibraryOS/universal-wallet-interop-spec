@@ -1,6 +1,6 @@
 {
   "name": "@welibraryos/universal-wallet",
-  "author": "Orie Steele",
+  "author": "Orie Steele, Nathan Tonani",
   "module": "dist/universal-wallet.esm.js",
   "version": "0.0.1",
   "license": "Apache-2.0",
@@ -12,6 +12,11 @@
   ],
   "engines": {
     "node": ">=10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WeLibraryOS/universal-wallet-interop-spec.git",
+    "directory": "packages/universal-wallet"
   },
   "scripts": {
     "start": "tsdx watch",
