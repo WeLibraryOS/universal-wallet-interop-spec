@@ -1,6 +1,6 @@
 {
   "name": "@welibraryos/universal-wallet-vc-plugin",
-  "author": "Orie Steele",
+  "author": "Orie Steele, Nathan Tonani",
   "module": "dist/universal-wallet-vc-plugin.esm.js",
   "version": "0.0.1",
   "license": "Apache-2.0",
@@ -10,9 +10,6 @@
     "dist",
     "src"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/w3c-ccg/universal-wallet-interop-spec.git"

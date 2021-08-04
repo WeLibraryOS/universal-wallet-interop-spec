@@ -1,16 +1,7 @@
-# @transmute/universal-wallet-vc-plugin
+NOTE: Please look at `@transmute/universal-wallet-vc-plugin` before choosing this package. It is more likely to be kept up to date with the latest spec.
+
+# @welibraryos/universal-wallet-vc-plugin
 
 ```
-npm i @transmute/universal-wallet-vc-plugin --save
-```
-
-## Getting Started
-
-```
-git clone git@github.com:w3c-ccg/universal-wallet-interop-spec.git
-npm packages/vc-plugin; // note that this is a mono repo
-npm i
-npm run lint
-npm run test
-npm run build
+npm i @welibraryos/universal-wallet-vc-plugin --save
 ```
