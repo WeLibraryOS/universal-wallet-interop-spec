@@ -1,6 +1,6 @@
 {
   "name": "@welibraryos/universal-wallet-did-key-plugin",
-  "author": "Orie Steele",
+  "author": "Orie Steele, Nathan Tonani",
   "module": "dist/universal-wallet-did-key-plugin.esm.js",
   "version": "0.0.1",
   "license": "Apache-2.0",
@@ -10,12 +10,10 @@
     "dist",
     "src"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/w3c-ccg/universal-wallet-interop-spec.git"
+    "url": "git+https://github.com/WeLibraryOS/universal-wallet-interop-spec.git",
+    "directory": "packages/did-key-plugin"
   },
   "engines": {
     "node": ">=10"
