@@ -12,7 +12,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/w3c-ccg/universal-wallet-interop-spec.git"
+    "url": "git+https://github.com/WeLibraryOS/universal-wallet-interop-spec.git",
+    "directory": "packages/vc-plugin"
   },
   "engines": {
     "node": ">=10"
