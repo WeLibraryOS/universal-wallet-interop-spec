@@ -6,26 +6,34 @@ const CREDENTIAL_ALIAS = 'credentials';
 
 const LOCAL_ALIASES = {
   [CREDENTIAL_ALIAS]:
-    'kjzl6cwe1jw147ou54myn46e38l7bhhfj0pwxe3py3yl3cbg39aos1ivc3bhqjz',
+    'kjzl6cwe1jw145srdogldozsvu5600tog0dsuus6q2zguhlv4m5z72z5xe6cv4l',
 };
+
+interface CredentialStreamIdInput {
+  id: string;
+  title: string;
+}
+
+interface CredentialItem {
+  id: string;
+  title: string;
+}
+
+interface CredentialsList {
+  credentials: CredentialItem[];
+}
 
 interface IdxPlugin {
   idxClient: any; // TODO: this is really an optional IDX, not any
-
   idxAliases: any;
-
-  credentialAlias: String;
-
+  credentialAlias: string;
   idxClientFromCeramic: (ceramicClient: CeramicClient, options: any) => IDX;
-
   setIdxClient: (ceramicClient: CeramicClient, options: any) => IDX;
-
-  getCredentialStreamIdsFromIndex: (alias: String) => Promise<any[]>;
-
+  getCredentialsListFromIndex: (alias: string) => Promise<CredentialsList>;
   addCredentialStreamIdToIndex: (
-    streamId: String,
-    alias: String
-  ) => Promise<String>;
+    record: CredentialStreamIdInput,
+    alias: string
+  ) => Promise<string>;
 }
 
 const factoryDefaults = {
@@ -56,16 +64,30 @@ const factoryDefaults = {
     return client;
   },
 
-  getCredentialStreamIdsFromIndex: async function(alias: String): Promise<any[]> {
-    return (await (this as IdxPlugin).idxClient.get(alias)) || [];
+  getCredentialsListFromIndex: async function(
+    alias: string
+  ): Promise<CredentialsList> {
+    if (!alias) {
+      alias = (this as IdxPlugin).credentialAlias;
+    }
+    return (await (this as IdxPlugin).idxClient.get(alias)) || { credentials: [] };
   },
 
-  addCredentialStreamIdToIndex: async (
-    streamId: String,
-    alias: String
-  ): Promise<String> => {
-    if (!streamId) {
+  addCredentialStreamIdToIndex: async function(
+    record: CredentialStreamIdInput,
+    alias: string
+  ): Promise<string> {
+    if (!record) {
+      throw new Error('record is required');
+    }
+
+    if (!record.id) {
       throw Error('No streamId provided');
+    }
+
+    // check streamId format
+    if (record.id.indexOf('ceramic://') === -1) {
+      record.id = 'ceramic://' + record.id;
     }
 
     const client = (this as IdxPlugin).idxClient;
@@ -73,10 +95,19 @@ const factoryDefaults = {
       throw Error('No IDX client available');
     }
 
-    const existing = await (this as IdxPlugin).getCredentialStreamIdsFromIndex(
+    if (!alias) {
+      alias = (this as IdxPlugin).credentialAlias;
+    }
+
+    const existing = await (this as IdxPlugin).getCredentialsListFromIndex(
       alias
     );
-    return (this as IdxPlugin).idxClient.set(alias, existing.push(streamId));
+
+    existing.credentials.push(record);
+
+    console.log(existing);
+    
+    return (this as IdxPlugin).idxClient.set(alias, existing);
   },
 };
 
