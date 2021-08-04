@@ -70,7 +70,9 @@ const factoryDefaults = {
     if (!alias) {
       alias = (this as IdxPlugin).credentialAlias;
     }
-    return (await (this as IdxPlugin).idxClient.get(alias)) || { credentials: [] };
+    return (
+      (await (this as IdxPlugin).idxClient.get(alias)) || { credentials: [] }
+    );
   },
 
   addCredentialStreamIdToIndex: async function(
@@ -106,7 +108,7 @@ const factoryDefaults = {
     existing.credentials.push(record);
 
     console.log(existing);
-    
+
     return (this as IdxPlugin).idxClient.set(alias, existing);
   },
 };
