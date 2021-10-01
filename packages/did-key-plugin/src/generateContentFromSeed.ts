@@ -1,10 +1,15 @@
 import * as ed25519 from '@transmute/did-key-ed25519';
 
-// TODO: why does this throw "Cannot set property 'default' of undefined"
-// import crypto from 'isomorphic-webcrypto'; 
-const crypto = require('isomorphic-webcrypto');
-
 export const seedToId = async (seed: Uint8Array) => {
+  // crypto is not able to be imported due to "Cannot set property 'default' of undefined" (Chrome consistently)
+  // most runtimes have global crypto target but it can be different based on target. this has been observed in nodejs.
+  // for now, we are using the isomorphic-webcrypto library locally to bypass above shortcomings and to maintain consistent behavior.
+  let crypto = require('isomorphic-webcrypto');
+
+  if (crypto.default) {
+    crypto = crypto.default;
+  }
+
   const buffer = await crypto.subtle.digest('SHA-256', seed);
   return `urn:digest:${Buffer.from(new Uint8Array(buffer)).toString('hex')}`;
 };

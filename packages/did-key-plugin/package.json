@@ -2,7 +2,7 @@
   "name": "@welibraryos/universal-wallet-did-key-plugin",
   "author": "Orie Steele, Nathan Tonani",
   "module": "dist/universal-wallet-did-key-plugin.esm.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -54,6 +54,5 @@
     "core-js": "^3.8.3",
     "factory.ts": "^0.5.1",
     "isomorphic-webcrypto": "^2.3.8"
-  },
-  "gitHead": "f987b871245fcf117da477bac5cb2fd99adf70be"
+  }
 }
