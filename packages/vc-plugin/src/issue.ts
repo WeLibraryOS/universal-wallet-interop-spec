@@ -7,7 +7,7 @@ import { IssueCredential } from './types';
 const issue = async ({ credential, options }: IssueCredential) => {
   const signedVC = await vc.issue({
     credential,
-    suite: options.suite,
+    ...options,
   });
   return signedVC;
 };
@@ -24,7 +24,7 @@ const issueUsingWalletSuite = async ({
   if (key) {
     const signingKey = Ed25519KeyPair.from(key);
     const suite = new Ed25519Signature2018({ key: signingKey });
-    return wallet.issue({ credential, options: { suite } });
+    return wallet.issue({ credential, options: { suite, ...options } });
   }
 };
 
