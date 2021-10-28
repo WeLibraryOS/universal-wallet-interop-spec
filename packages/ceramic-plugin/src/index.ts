@@ -1,29 +1,28 @@
 import * as Factory from 'factory.ts';
-import CeramicClient from "@ceramicnetwork/http-client";
-import { TileDocument, TileMetadataArgs } from "@ceramicnetwork/stream-tile";
-import KeyDidResolver from "key-did-resolver";
-import { DID } from "dids";
-import { Ed25519Provider } from "key-did-provider-ed25519";
-import { toUint8Array } from "hex-lite";
+import CeramicClient from '@ceramicnetwork/http-client';
+import { TileDocument, TileMetadataArgs } from '@ceramicnetwork/stream-tile';
+import { CreateOpts } from '@ceramicnetwork/common';
+import KeyDidResolver from 'key-did-resolver';
+import { DID } from 'dids';
+import { Ed25519Provider } from 'key-did-provider-ed25519';
+import { toUint8Array } from 'hex-lite';
 
-const LOCAL_CERAMIC_NODE = "http://0.0.0.0:7007";
+const LOCAL_CERAMIC_NODE = 'http://0.0.0.0:7007';
+const VC_CREDENTIAL_CONTENT_FAMILY = 'universal-wallet-vc-credential';
 
 interface CeramicPlugin {
   ceramicClient: any; // TODO: this is optional CeramicClient
   defaultContentFamily: string;
-  endpoint: string;
+  ceramicEndpoint: string;
 
-  ceramicClientFromWalletSuite: (
-    wallet: any,
-  ) => Promise<CeramicClient>;
+  ceramicClientFromWalletSuite: (wallet: any) => Promise<CeramicClient>;
 
-  setCeramicClientFromWalletSuite: (
-    wallet: any,
-  ) => Promise<CeramicClient>;
+  setCeramicClientFromWalletSuite: (wallet: any) => Promise<CeramicClient>;
 
   publishContentToCeramic: (
     content: any,
-    options: TileMetadataArgs
+    metadata?: TileMetadataArgs,
+    options?: CreateOpts
   ) => Promise<string>;
 
   readContentFromCeramic: (streamId: string) => Promise<any>;
@@ -32,14 +31,15 @@ interface CeramicPlugin {
 const factoryDefaults = {
   ceramicClient: null,
 
-  defaultContentFamily: "LEF-CREDENTIAL-TEST",
+  defaultContentFamily: VC_CREDENTIAL_CONTENT_FAMILY,
 
-  endpoint: LOCAL_CERAMIC_NODE,
+  ceramicEndpoint: LOCAL_CERAMIC_NODE,
 
-  ceramicClientFromWalletSuite: async function(wallet: any = {},
+  ceramicClientFromWalletSuite: async function (
+    wallet: any = {}
   ): Promise<CeramicClient> {
-
-    const client = new CeramicClient((this as CeramicPlugin).endpoint);
+    console.log((this as CeramicPlugin).ceramicEndpoint);
+    const client = new CeramicClient((this as CeramicPlugin).ceramicEndpoint);
 
     // only supporting did-key atm. this should be stripped into a config param
     const resolver = { ...KeyDidResolver.getResolver() };
@@ -54,9 +54,7 @@ const factoryDefaults = {
       (c: { name: string }) => c?.name === 'DID Key Secret'
     )?.value;
 
-    const ceramicProvider = new Ed25519Provider(
-        toUint8Array(key)
-      );
+    const ceramicProvider = new Ed25519Provider(toUint8Array(key));
     client.did.setProvider(ceramicProvider);
 
     await client.did.authenticate();
@@ -64,50 +62,62 @@ const factoryDefaults = {
     return client;
   },
 
-  setCeramicClientFromWalletSuite: async function(
-      wallet: any = {},
+  setCeramicClientFromWalletSuite: async function (
+    wallet: any = {}
   ): Promise<CeramicClient> {
-
-    const client = await (this as CeramicPlugin).ceramicClientFromWalletSuite(wallet);
+    const client = await (this as CeramicPlugin).ceramicClientFromWalletSuite(
+      wallet
+    );
     (this as CeramicPlugin).ceramicClient = client;
     return client;
   },
 
-  publishContentToCeramic: async function(content: any, options: TileMetadataArgs = { }) {
+  publishContentToCeramic: async function (
+    content: any,
+    metadata: TileMetadataArgs = {},
+    options: CreateOpts = {}
+  ) {
     if (!content) {
       throw new Error('content is required');
     }
 
     const client = (this as CeramicPlugin).ceramicClient;
     if (!client) {
-      throw new Error("ceramicClient not set");
+      throw new Error('ceramicClient not set');
     }
 
     // default to current authorized
-    if (!options.controllers) {
-      options.controllers = [(this as CeramicPlugin).ceramicClient.did.id];
+    if (!metadata.controllers) {
+      metadata.controllers = [(this as CeramicPlugin).ceramicClient.did.id];
     }
 
     // use default
-    if (!options.family) {
-      options.family = (this as CeramicPlugin).defaultContentFamily;
+    if (!metadata.family) {
+      metadata.family = (this as CeramicPlugin).defaultContentFamily;
     }
+
+    // default to pinning
+    // TODO: expose
+    if (!('pin' in options)) {
+      options.pin = true;
+    }
+
     // assuming TileDocument for now
-    const doc = await TileDocument.create(client, content, options);
+    const doc = await TileDocument.create(client, content, metadata, options);
 
     console.log(doc); // TODO: remove when done debugging
-    
+
     return doc.id.toString();
   },
 
-  readContentFromCeramic: async function(streamId: string) {
+  readContentFromCeramic: async function (streamId: string) {
     const client = (this as CeramicPlugin).ceramicClient;
     if (!client) {
-      throw new Error("ceramicClient not set");
+      throw new Error('ceramicClient not set');
     }
 
     return (await TileDocument.load(client, streamId))?.content;
-  }
+  },
 };
 
 const pluginFactory = Factory.Sync.makeFactory<CeramicPlugin>(factoryDefaults);

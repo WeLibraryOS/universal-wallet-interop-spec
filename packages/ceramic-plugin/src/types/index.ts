@@ -1,4 +1,4 @@
 export interface CeramicClient {
-    endpoint: String;
-    wallet: any;
+  ceramicEndpoint: String;
+  wallet: any;
 }
