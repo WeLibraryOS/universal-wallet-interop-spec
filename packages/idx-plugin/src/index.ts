@@ -1,13 +1,11 @@
 import * as Factory from 'factory.ts';
 import { IDX } from '@ceramicstudio/idx';
 import CeramicClient from '@ceramicnetwork/http-client';
+import type StreamID from '@ceramicnetwork/streamid';
 
-const CREDENTIAL_ALIAS = 'credentials';
+const DEFAULT_CREDENTIAL_ALIAS = 'MyVerifiableCredentials';
 
-const LOCAL_ALIASES = {
-  [CREDENTIAL_ALIAS]:
-    'kjzl6cwe1jw145srdogldozsvu5600tog0dsuus6q2zguhlv4m5z72z5xe6cv4l',
-};
+const DEFAULT_ALIASES = {};
 
 interface CredentialStreamIdInput {
   id: string;
@@ -24,7 +22,7 @@ interface CredentialsList {
 }
 
 interface IdxPlugin {
-  idxClient: any; // TODO: this is really an optional IDX, not any
+  idxClient: IDX | null;
   idxAliases: any;
   credentialAlias: string;
   idxClientFromCeramic: (ceramicClient: CeramicClient, options: any) => IDX;
@@ -33,25 +31,31 @@ interface IdxPlugin {
   addCredentialStreamIdToIndex: (
     record: CredentialStreamIdInput,
     alias: string
-  ) => Promise<string>;
+  ) => Promise<StreamID>;
 }
 
 const factoryDefaults = {
   idxClient: null,
 
-  idxAliases: LOCAL_ALIASES,
+  idxAliases: DEFAULT_ALIASES,
 
-  credentialAlias: CREDENTIAL_ALIAS,
+  credentialAlias: DEFAULT_CREDENTIAL_ALIAS,
 
-  idxClientFromCeramic: (
+  idxClientFromCeramic: function (
     ceramicClient: CeramicClient,
-    options: any = { aliases: LOCAL_ALIASES }
-  ): IDX => {
+    options: any = {}
+  ): IDX {
+    if (!options.aliases) {
+      options.aliases = (this as IdxPlugin).idxAliases;
+    }
     const client = new IDX({ ceramic: ceramicClient, ...options });
     return client;
   },
 
-  setIdxClient: function(ceramicClient: CeramicClient, options: any = {}): IDX {
+  setIdxClient: function (
+    ceramicClient: CeramicClient,
+    options: any = {}
+  ): IDX {
     if (!options.aliases) {
       options.aliases = (this as IdxPlugin).idxAliases;
     }
@@ -64,21 +68,25 @@ const factoryDefaults = {
     return client;
   },
 
-  getCredentialsListFromIndex: async function(
+  getCredentialsListFromIndex: async function (
     alias: string
   ): Promise<CredentialsList> {
     if (!alias) {
       alias = (this as IdxPlugin).credentialAlias;
     }
+
+    if (!(this as IdxPlugin).idxClient) {
+      throw new Error('No IDX client set');
+    }
     return (
-      (await (this as IdxPlugin).idxClient.get(alias)) || { credentials: [] }
+      (await (this as IdxPlugin).idxClient!.get(alias)) || { credentials: [] }
     );
   },
 
-  addCredentialStreamIdToIndex: async function(
+  addCredentialStreamIdToIndex: async function (
     record: CredentialStreamIdInput,
     alias: string
-  ): Promise<string> {
+  ): Promise<StreamID> {
     if (!record) {
       throw new Error('record is required');
     }
@@ -107,9 +115,11 @@ const factoryDefaults = {
 
     existing.credentials.push(record);
 
-    console.log(existing);
+    if (!(this as IdxPlugin).idxClient) {
+      throw new Error('No IDX client set');
+    }
 
-    return (this as IdxPlugin).idxClient.set(alias, existing);
+    return (this as IdxPlugin).idxClient!.set(alias, existing);
   },
 };
 
