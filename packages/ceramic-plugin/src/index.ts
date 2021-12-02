@@ -35,10 +35,9 @@ const factoryDefaults = {
 
   ceramicEndpoint: LOCAL_CERAMIC_NODE,
 
-  ceramicClientFromWalletSuite: async function (
+  ceramicClientFromWalletSuite: async function(
     wallet: any = {}
   ): Promise<CeramicClient> {
-    console.log((this as CeramicPlugin).ceramicEndpoint);
     const client = new CeramicClient((this as CeramicPlugin).ceramicEndpoint);
 
     // only supporting did-key atm. this should be stripped into a config param
@@ -62,7 +61,7 @@ const factoryDefaults = {
     return client;
   },
 
-  setCeramicClientFromWalletSuite: async function (
+  setCeramicClientFromWalletSuite: async function(
     wallet: any = {}
   ): Promise<CeramicClient> {
     const client = await (this as CeramicPlugin).ceramicClientFromWalletSuite(
@@ -72,7 +71,7 @@ const factoryDefaults = {
     return client;
   },
 
-  publishContentToCeramic: async function (
+  publishContentToCeramic: async function(
     content: any,
     metadata: TileMetadataArgs = {},
     options: CreateOpts = {}
@@ -105,12 +104,10 @@ const factoryDefaults = {
     // assuming TileDocument for now
     const doc = await TileDocument.create(client, content, metadata, options);
 
-    console.log(doc); // TODO: remove when done debugging
-
     return doc.id.toString();
   },
 
-  readContentFromCeramic: async function (streamId: string) {
+  readContentFromCeramic: async function(streamId: string) {
     const client = (this as CeramicPlugin).ceramicClient;
     if (!client) {
       throw new Error('ceramicClient not set');
