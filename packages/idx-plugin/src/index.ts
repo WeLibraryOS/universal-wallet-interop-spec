@@ -27,10 +27,10 @@ interface IdxPlugin {
   credentialAlias: string;
   idxClientFromCeramic: (ceramicClient: CeramicClient, options: any) => IDX;
   setIdxClient: (ceramicClient: CeramicClient, options: any) => IDX;
-  getCredentialsListFromIndex: (alias: string) => Promise<CredentialsList>;
+  getCredentialsListFromIndex: (alias?: string) => Promise<CredentialsList>;
   addCredentialStreamIdToIndex: (
     record: CredentialStreamIdInput,
-    alias: string
+    alias?: string
   ) => Promise<StreamID>;
 }
 
@@ -69,7 +69,7 @@ const factoryDefaults = {
   },
 
   getCredentialsListFromIndex: async function (
-    alias: string
+    alias?: string
   ): Promise<CredentialsList> {
     if (!alias) {
       alias = (this as IdxPlugin).credentialAlias;
@@ -85,7 +85,7 @@ const factoryDefaults = {
 
   addCredentialStreamIdToIndex: async function (
     record: CredentialStreamIdInput,
-    alias: string
+    alias?: string
   ): Promise<StreamID> {
     if (!record) {
       throw new Error('record is required');

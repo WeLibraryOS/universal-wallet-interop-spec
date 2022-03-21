@@ -2,7 +2,7 @@
   "name": "@welibraryos/universal-wallet-idx-plugin",
   "author": "Nathan Tonani",
   "module": "dist/universal-wallet-idx-plugin.esm.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
