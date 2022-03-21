@@ -15,6 +15,9 @@
     "url": "git+https://github.com/WeLibraryOS/universal-wallet-interop-spec.git",
     "directory": "packages/idx-plugin"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "engines": {
     "node": ">=10"
   },
