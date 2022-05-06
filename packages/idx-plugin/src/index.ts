@@ -1,7 +1,7 @@
 import * as Factory from 'factory.ts';
 import { IDX, IDXOptions, Aliases } from '@ceramicstudio/idx';
 import CeramicClient from '@ceramicnetwork/http-client';
-import type StreamID from '@ceramicnetwork/streamid';
+import StreamID from '@ceramicnetwork/streamid';
 
 const DEFAULT_CREDENTIAL_ALIAS = 'MyVerifiableCredentials';
 
