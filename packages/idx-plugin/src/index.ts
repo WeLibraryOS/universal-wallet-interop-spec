@@ -41,7 +41,7 @@ const factoryDefaults = {
 
     credentialAlias: DEFAULT_CREDENTIAL_ALIAS,
 
-    idxClientFromCeramic: function (
+    idxClientFromCeramic: function(
         this: IdxPlugin,
         ceramicClient: CeramicClient,
         options: Partial<IDXOptions> = {}
@@ -53,7 +53,7 @@ const factoryDefaults = {
         return client;
     },
 
-    setIdxClient: function (
+    setIdxClient: function(
         this: IdxPlugin,
         ceramicClient: CeramicClient,
         options: Partial<IDXOptions> = {}
@@ -67,7 +67,7 @@ const factoryDefaults = {
         return client;
     },
 
-    getCredentialsListFromIndex: async function (
+    getCredentialsListFromIndex: async function(
         this: IdxPlugin,
         alias?: string
     ): Promise<CredentialsList> {
@@ -78,7 +78,7 @@ const factoryDefaults = {
         return (await this.idxClient.get(alias)) || { credentials: [] };
     },
 
-    addCredentialStreamIdToIndex: async function (
+    addCredentialStreamIdToIndex: async function(
         this: IdxPlugin,
         record: CredentialStreamIdInput,
         alias?: string
