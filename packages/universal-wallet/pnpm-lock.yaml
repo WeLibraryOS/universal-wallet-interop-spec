@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@peculiar/webcrypto': ^1.1.4
+  '@peculiar/webcrypto': 1.1.4
   '@size-limit/preset-small-lib': ^4.9.1
   '@transmute/did-key-cipher': ^0.2.1-unstable.31
   '@transmute/did-key-x25519': ^0.2.1-unstable.31
@@ -16,7 +16,7 @@ specifiers:
   typescript: ^4.1.3
 
 dependencies:
-  '@peculiar/webcrypto': registry.npmjs.org/@peculiar/webcrypto/1.3.3
+  '@peculiar/webcrypto': registry.npmjs.org/@peculiar/webcrypto/1.1.4
   '@transmute/did-key-cipher': registry.npmjs.org/@transmute/did-key-cipher/0.2.1-unstable.42
   '@transmute/did-key-x25519': registry.npmjs.org/@transmute/did-key-x25519/0.2.1-unstable.42
   '@transmute/universal-wallet-test-vectors': registry.npmjs.org/@transmute/universal-wallet-test-vectors/0.5.0
@@ -1821,6 +1821,19 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       tslib: registry.npmjs.org/tslib/2.4.0
+    dev: false
+
+  registry.npmjs.org/@peculiar/webcrypto/1.1.4:
+    resolution: {integrity: sha512-gEVxfbseFDV0Za3AmjTrRB+wigEMOejHDzoo571e8/YWD33Ejmk0XPF3+G+VaN8+5C5IWZx4CPvxQZ7mF2dvNA==, registry: https://npm.pkg.github.com/welibraryos, tarball: https://registry.npmjs.org/@peculiar/webcrypto/-/webcrypto-1.1.4.tgz}
+    name: '@peculiar/webcrypto'
+    version: 1.1.4
+    engines: {node: '>=10.12.0'}
+    dependencies:
+      '@peculiar/asn1-schema': registry.npmjs.org/@peculiar/asn1-schema/2.1.0
+      '@peculiar/json-schema': registry.npmjs.org/@peculiar/json-schema/1.1.12
+      pvtsutils: registry.npmjs.org/pvtsutils/1.3.2
+      tslib: registry.npmjs.org/tslib/2.4.0
+      webcrypto-core: registry.npmjs.org/webcrypto-core/1.7.3
     dev: false
 
   registry.npmjs.org/@peculiar/webcrypto/1.3.3:
